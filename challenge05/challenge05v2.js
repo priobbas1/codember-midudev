@@ -61,9 +61,24 @@ Por ejemplo, si el usuario que sobrevive es facundopacua y está en el índice 8
 
 $ submit facundocapua-8 */
 
-const numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const { readFileSync } = require("fs");
+
+function syncReadFile(filename) {
+  const rawContent = readFileSync(filename, "utf-8");
+  const editedContent = rawContent.replace(/[," ]+/g, "");
+  const indexIni = editedContent.indexOf("[") + 2;
+  const indexEnd = editedContent.indexOf("]") - 1;
+  const rawArray = editedContent.substring(indexIni, indexEnd);
+  const arr = rawArray.split(/\r?\n/);
+
+  return arr;
+}
+
+const mecenas = syncReadFile("./mecenas.txt");
 let roundCounter = 0;
-let survivors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+let survivors = [...mecenas];
+
+console.log(survivors);
 
 function ronda(numeros) {
   const copiaNumeros = [...numeros];
@@ -90,3 +105,22 @@ function ronda(numeros) {
 do {
   ronda(survivors);
 } while (survivors.length > 1);
+
+let posiciones = [];
+for (let i = 0; i < mecenas.length; i++) {
+  if (mecenas[i] === survivors[0]) {
+    posiciones.push(i);
+  }
+}
+console.log(posiciones);
+
+let posiciones2 = [];
+mecenas.filter((x, index) => {
+  if (x === "Diana") {
+    posiciones2.push(index);
+  }
+});
+
+console.log(posiciones2);
+
+//solucion: Diana-100
